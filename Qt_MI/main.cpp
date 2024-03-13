@@ -35,5 +35,6 @@ int main(int argc, char* argv[])
     rect->setPos(view->width() / 2, view->height() / 2 - rect->rect().height());
 
 
+
     return a.exec();
 }
