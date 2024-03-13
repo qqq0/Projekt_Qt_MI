@@ -39,8 +39,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="player.h">
+    <QtMoc Include="player.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </QtMoc>
   </ItemGroup>
 </Project>
