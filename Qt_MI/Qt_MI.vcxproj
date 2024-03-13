@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="levels.cpp" />
     <ClCompile Include="player.cpp" />
     <QtRcc Include="Qt_MI.qrc" />
     <QtUic Include="Qt_MI.ui" />
@@ -96,6 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="levels.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

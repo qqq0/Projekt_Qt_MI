@@ -8,8 +8,10 @@ player::player() {
 	setBrush(QBrush(Qt::blue));
 	setRect(0, 0, 20, 20);
 	
-	timer = new QTimer(this);
-	connect(timer, &QTimer::timeout, this, &player::movePlayer);
+	//timer = new QTimer(this);
+	//connect(timer, &QTimer::timeout, this, &player::movePlayer);
+
+
 	
 }
 
@@ -21,9 +23,9 @@ void player::keyPressEvent(QKeyEvent* event)
 
 	keysPressed += event->key();	// add key to set of pressed keys when pressed
 	
-	if (!timer->isActive()) {
-		timer->start(playerMoveDelay);
-	}
+	//if (!timer->isActive()) {
+	//	timer->start(playerMoveDelay);
+	//}
 
 }
 
@@ -34,9 +36,9 @@ void player::keyReleaseEvent(QKeyEvent* event)
 	}
 	keysPressed -= event->key();	// remove key from set of pressed keys when released
 
-	if (keysPressed.isEmpty()) {
-		timer->stop();
-	}
+	//if (keysPressed.isEmpty()) {
+	//	timer->stop();
+	//}
 
 }
 
@@ -74,11 +76,21 @@ void player::collisionDetection(int X,int Y) {
 
 	for (QGraphicsItem* item : collidingItems) {
 		if (typeid(*item) == typeid(QGraphicsRectItem)) {
-			qDebug() << "colision detected";
 			setPos(X, Y);
+
 		}
 
 	}
+}
+
+bool player::exitLvl() {
+	if (x() > 20 && x() < 25 && y()>275 && y()<285) {	//exit coordiantes
+		return true;
+	}
+	else {
+		return false;
+	}
+
 }
 
 	

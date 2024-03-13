@@ -13,12 +13,14 @@ public:
 	void keyPressEvent(QKeyEvent* event);
 	void keyReleaseEvent(QKeyEvent* event);
 	player();
+	bool exitLvl();
+	void movePlayer();
 
 private:
 	const int playerMoveDelay = 10;	//delay between moves in ms
-	QTimer* timer;
+	//QTimer* timer;
 	QSet<int> keysPressed;
-	void movePlayer();
+	//void movePlayer();
 	void collisionDetection(int X, int Y);
 
 private slots:
