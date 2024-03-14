@@ -15,12 +15,7 @@ int main(int argc, char* argv[])
     //creating a scene
     QGraphicsScene* scene = new QGraphicsScene();
 
-    //create a player
-    player* rect = new player();
 
-
-    //add player to scene
-    scene->addItem(rect);
 
     // add walls
     levels levels;
@@ -29,10 +24,6 @@ int main(int argc, char* argv[])
     
    
     //qDebug() << X;
-
-    //make player focusble
-    rect->setFlag(QGraphicsItem::ItemIsFocusable);
-    rect->setFocus();
 
     //add a view
     QGraphicsView* view = new QGraphicsView(scene);
@@ -45,21 +36,32 @@ int main(int argc, char* argv[])
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     
     //create a player
-    view->show();
+    int startX = view->width() - 45;
+    int startY = view->height() / 2 - entity::SIZE;
+    player* rect = new player(startX, startY);
+    //make player focusble
+    rect->setFlag(QGraphicsItem::ItemIsFocusable);
+    rect->setFocus();
 
-    rect->setPos(view->width() - 45, view->height() / 2 - rect->rect().height());
+    //add player to scene
+    scene->addItem(rect);
+
+    //create a player
+    view->show();
 
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
+            // check keyboard
             rect->movePlayer();
+            rect->render();
             if (rect->exitLvl()) {
-                rect->setPos(view->width() - 45, view->height() / 2 - rect->rect().height());
+                rect->setEntityPos(startX, startY);
                 levels.nextLvl();
                 levels.addWalls(scene);
             }
             qDebug() << rect->exitLvl();
             });
-        gameTick->start(10);
+        gameTick->start(2);
 
 
     return a.exec();

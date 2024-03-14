@@ -9,6 +9,7 @@ class levels : public QGraphicsRectItem {
 
 public:
 	levels();
+	~levels();
 	void addWalls(QGraphicsScene* scene);
 	void nextLvl();
 private:

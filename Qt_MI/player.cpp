@@ -4,17 +4,6 @@
 #include <QPainter>
 #include <QgraphicsScene>
 
-player::player() {
-	setBrush(QBrush(Qt::blue));
-	setRect(0, 0, 20, 20);
-	
-	//timer = new QTimer(this);
-	//connect(timer, &QTimer::timeout, this, &player::movePlayer);
-
-
-	
-}
-
 void player::keyPressEvent(QKeyEvent* event)
 {
 	if (event->isAutoRepeat()) {
@@ -42,55 +31,40 @@ void player::keyReleaseEvent(QKeyEvent* event)
 
 }
 
-
+/// <summary>
+/// Update internal coordinates based on key press
+/// </summary>
 void player::movePlayer() {
-	
-	int prevX, prevY;
-	prevX = x();
-	prevY = y();
+	int newX = x;
+	int newY = y;
 
 	if (keysPressed.contains(Qt::Key_Left)) {
-		setPos(x() - 1, y());
-
+		newX--;
 	}
 	if (keysPressed.contains(Qt::Key_Right)) {
-		setPos(x() + 1, y());
-
-
+		newX++;
 	}
-	collisionDetection(prevX, y());
-
 	if (keysPressed.contains(Qt::Key_Up)) {
-		setPos(x(), y() - 1);
+		newY--;
 	}
 	if (keysPressed.contains(Qt::Key_Down)) {
-		setPos(x(), y() + 1);
+		newY++;
 	}
 
-	collisionDetection(x(), prevY);
-	
+	move(newX, newY);
 }
 
-void player::collisionDetection(int X,int Y) {
-	QList<QGraphicsItem*> collidingItems = scene()->collidingItems(this);
-
-	for (QGraphicsItem* item : collidingItems) {
-		if (typeid(*item) == typeid(QGraphicsRectItem)) {
-			setPos(X, Y);
-
-		}
-
-	}
+player::player(int x, int y) : entity(x, y)
+{
 }
 
 bool player::exitLvl() {
-	if (x() > 20 && x() < 25 && y()>275 && y()<285) {	//exit coordiantes
+	if (x > 20 && x < 25 && y>275 && y<285) {	//exit coordiantes
 		return true;
 	}
 	else {
 		return false;
 	}
-
 }
 
 	
