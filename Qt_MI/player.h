@@ -17,6 +17,7 @@ public:
 	void movePlayer();
 	player(int x, int y);
 	static const QColor defaultColor;
+	void getPlayerPos(int* getX, int* getY);
 private:
 	const int playerMoveDelay = 10;	//delay between moves in ms
 	//QTimer* timer;

@@ -90,6 +90,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="gameState.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="levels.cpp" />
     <ClCompile Include="player.cpp" />
@@ -102,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="gameState.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="levels.h" />
   </ItemGroup>

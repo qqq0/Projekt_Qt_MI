@@ -69,4 +69,7 @@ bool player::exitLvl() {
 	}
 }
 
-	
+void player::getPlayerPos(int* getX, int* getY) {
+	*getX = x;
+	*getY = y;
+}

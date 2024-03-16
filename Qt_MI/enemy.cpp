@@ -16,3 +16,9 @@ void enemy::moveEnemy() {
 	move(newX, newY);
 
 }
+
+int enemy::distanceTo(int ToX, int ToY) {
+	int dist;
+	dist = (int)sqrt((x - ToX) * (x - ToX) + (y - ToY) * (y - ToY));
+	return dist;
+}

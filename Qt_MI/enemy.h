@@ -6,6 +6,7 @@ public:
 	static const QColor defaultColor;
 	enemy(int x, int y);
 	void moveEnemy();
+	int distanceTo(int ToX, int ToY);
 private:
 	
 };

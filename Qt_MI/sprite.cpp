@@ -5,7 +5,7 @@ bool sprite::collisionDetection() {
 
 	for (QGraphicsItem* item : collidingItems) {
 		// check if item is sprite subclass
-		if (dynamic_cast<sprite*>(item) != nullptr) {
+		if (dynamic_cast<sprite*>(item) != nullptr) {	
 			return true;
 		}
 		

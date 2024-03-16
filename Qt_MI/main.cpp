@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QTimer>
 #include "enemy.h"
+#include "gameState.h"
+#include <QMessageBox>
 
 #include <vector>
 
@@ -39,8 +41,8 @@ int main(int argc, char* argv[])
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     
     //create a player
-    int startX = view->width() - 45;
-    int startY = view->height() / 2 - sprite::SIZE;
+    const int startX = view->width() - 45;
+    const int startY = view->height() / 2 - sprite::SIZE;
     player* rect = new player(startX, startY);
     //make player focusble
     rect->setFlag(QGraphicsItem::ItemIsFocusable);
@@ -52,12 +54,25 @@ int main(int argc, char* argv[])
     //create a player
     view->show();
 
-    //create enemi
+    //create and add game state indicators to scene
+    gameState gameState(scene);
+    gameState.render(scene);
+
+    //create enemy
     std::vector<enemy*> enemies{ new enemy(100, 100), new enemy(150, 100), new enemy(100, 200) };
+    std::vector<int> enemyStartX{ 50,70,50 };
+    std::vector<int> enemyStartY{ 260,300,340 };
+ 
+    //enemy kill range
+    const int killDis = 22;
 
     for (auto& e : enemies) {
         scene->addItem(e);
     }
+
+    int tmpX, tmpY, minDistance; // minDistance - minimal distance between player and cloasest enemy
+
+    QMessageBox::information(nullptr, "Message Box", "use arrows to move\npress 'OK' to continue");
 
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
@@ -74,15 +89,55 @@ int main(int argc, char* argv[])
                 e->render();
             }
 
-            //end lvl condition:
+            gameState.render(scene);
+
+
+            //next lvl condition:
             if (rect->exitLvl()) {
+                gameState.changeScoreBy(100);
                 rect->setSpritePos(startX, startY);
+                for (size_t i = 0; i < enemies.size();i++) {
+                    enemies[i]->setSpritePos(enemyStartX[i], enemyStartY[i]);
+                }
                 levels.nextLvl();
                 levels.addWalls(scene);
             }
-            //qDebug() << rect->exitLvl();
+
+            //check if player is to close to enemy:
+            rect->getPlayerPos(&tmpX, &tmpY);
+            minDistance = view->width() + view->height(); // width + height always > diagonal [maximum distance]
+
+            for (auto& e : enemies) {
+                int dist = e->distanceTo(tmpX, tmpY);
+
+                if (minDistance > dist) {
+                    minDistance = dist;
+                }
+            }
+
+
+            //reset lvl condition:
+            if (minDistance <= killDis) {
+                rect->setSpritePos(startX, startY);
+                gameState.kill();
+
+                for (size_t i = 0; i < enemies.size(); i++) {
+                    enemies[i]->setSpritePos(enemyStartX[i], enemyStartY[i]);
+                }
+            }
+
+            //chceck if player is alive
+            if (!gameState.continueGame()) {
+                QMessageBox::information(nullptr, "Message Box", "YOU DIED\n press 'OK' to close");
+                QCoreApplication::quit();
+            }
+            
+            //qDebug() << rect->getEndLvl();
+            //qDebug() << tmpX << " " << tmpY;
+            //qDebug() << minDistance;
+
             });
-        gameTick->start(10);
+        gameTick->start(5);
 
 
     return a.exec();
