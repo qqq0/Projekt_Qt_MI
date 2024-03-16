@@ -1,32 +1,34 @@
-#include "entity.h"
+#include "sprite.h"
 
-
-
-bool entity::collisionDetection() {
+bool sprite::collisionDetection() {
 	QList<QGraphicsItem*> collidingItems = scene()->collidingItems(this);
 
 	for (QGraphicsItem* item : collidingItems) {
-		if (typeid(*item) == typeid(QGraphicsRectItem)) {
-			
+		// check if item is sprite subclass
+		if (dynamic_cast<sprite*>(item) != nullptr) {
 			return true;
 		}
-
+		
+		// check if wall
+		if (typeid(*item) == typeid(QGraphicsRectItem)) {	
+			return true;
+		}
 	}
 	return false;
 }
 
-entity::entity(int x, int y)
+sprite::sprite(int x, int y, QBrush col)
 {
-	setBrush(QBrush(Qt::blue));
+	setBrush(col);
 	setRect(0, 0, SIZE, SIZE);
-	setEntityPos(x, y);
+	setSpritePos(x, y);
 }
 
 /// <summary>
 /// Render entity position
 /// Revert position if collision detected
 /// </summary>
-void entity::render() {
+void sprite::render() {
 
 	setPos(x, prevY);
 	if (collisionDetection()) {
@@ -44,7 +46,7 @@ void entity::render() {
 	prevY = y;
 };
 
-void entity::setEntityPos(int x, int y) {
+void sprite::setSpritePos(int x, int y) {
 	setPos(x, y);
 	this->x = x;
 	this->y = y;
@@ -55,7 +57,7 @@ void entity::setEntityPos(int x, int y) {
 /// <summary>
 /// Update internal coordinates
 /// </summary>
-void entity::move(int x, int y) {
+void sprite::move(int x, int y) {
 	this->x = x;
 	this->y = y;
 };

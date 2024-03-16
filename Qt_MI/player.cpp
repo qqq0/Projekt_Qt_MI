@@ -4,6 +4,8 @@
 #include <QPainter>
 #include <QgraphicsScene>
 
+const QColor player::defaultColor = QColor(Qt::blue);
+
 void player::keyPressEvent(QKeyEvent* event)
 {
 	if (event->isAutoRepeat()) {
@@ -54,7 +56,7 @@ void player::movePlayer() {
 	move(newX, newY);
 }
 
-player::player(int x, int y) : entity(x, y)
+player::player(int x, int y) : sprite(x, y, player::defaultColor)
 {
 }
 

@@ -89,7 +89,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="entity.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="levels.cpp" />
     <ClCompile Include="player.cpp" />
     <QtRcc Include="Qt_MI.qrc" />
@@ -100,7 +101,8 @@
     <QtMoc Include="player.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="entity.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="levels.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,9 +6,9 @@
 #include <QKeyEvent>
 #include <QObject>
 #include <QTimer>
-#include "entity.h"
+#include "sprite.h"
 
-class player : public entity {
+class player : public sprite {
 	Q_OBJECT	//Add Q_object to be able to handle slots (for timer)
 public:
 	void keyPressEvent(QKeyEvent* event);
@@ -16,7 +16,7 @@ public:
 	bool exitLvl();
 	void movePlayer();
 	player(int x, int y);
-
+	static const QColor defaultColor;
 private:
 	const int playerMoveDelay = 10;	//delay between moves in ms
 	//QTimer* timer;

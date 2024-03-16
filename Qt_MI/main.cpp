@@ -5,10 +5,13 @@
 #include "levels.h"
 #include <QDebug>
 #include <QTimer>
+#include "enemy.h"
 
+#include <vector>
 
 int main(int argc, char* argv[])
 {
+    srand(11); // time(nullptr)
 
     QApplication a(argc, argv);
 
@@ -37,7 +40,7 @@ int main(int argc, char* argv[])
     
     //create a player
     int startX = view->width() - 45;
-    int startY = view->height() / 2 - entity::SIZE;
+    int startY = view->height() / 2 - sprite::SIZE;
     player* rect = new player(startX, startY);
     //make player focusble
     rect->setFlag(QGraphicsItem::ItemIsFocusable);
@@ -49,19 +52,37 @@ int main(int argc, char* argv[])
     //create a player
     view->show();
 
+    //create enemi
+    std::vector<enemy*> enemies{ new enemy(100, 100), new enemy(150, 100), new enemy(100, 200) };
+
+    for (auto& e : enemies) {
+        scene->addItem(e);
+    }
+
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
+            //move:
             // check keyboard
             rect->movePlayer();
+            for (auto& e : enemies) {
+                e->moveEnemy();
+            }
+
+            //render:
             rect->render();
+            for (auto& e : enemies) {
+                e->render();
+            }
+
+            //end lvl condition:
             if (rect->exitLvl()) {
-                rect->setEntityPos(startX, startY);
+                rect->setSpritePos(startX, startY);
                 levels.nextLvl();
                 levels.addWalls(scene);
             }
-            qDebug() << rect->exitLvl();
+            //qDebug() << rect->exitLvl();
             });
-        gameTick->start(2);
+        gameTick->start(10);
 
 
     return a.exec();
