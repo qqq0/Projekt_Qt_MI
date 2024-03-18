@@ -13,7 +13,7 @@
 
 int main(int argc, char* argv[])
 {
-    srand(11); // time(nullptr)
+    srand(time(nullptr)); // time(nullptr)
 
     QApplication a(argc, argv);
 
@@ -59,12 +59,14 @@ int main(int argc, char* argv[])
     gameState.render(scene);
 
     //create enemy
-    std::vector<enemy*> enemies{ new enemy(100, 100), new enemy(150, 100), new enemy(100, 200) };
-    std::vector<int> enemyStartX{ 50,70,50 };
-    std::vector<int> enemyStartY{ 260,300,340 };
+    std::vector<enemy*> enemies{ new enemy(100, 100) , new enemy(150, 100), new enemy(100, 200)};
+    std::vector<int> enemyStartX{ 50 ,70,50 };
+    std::vector<int> enemyStartY{ 260 ,300,340 };
  
     //enemy kill range
     const int killDis = 22;
+    const  int chaseDis = 200;
+    bool chasing = false;
 
     for (auto& e : enemies) {
         scene->addItem(e);
@@ -72,25 +74,13 @@ int main(int argc, char* argv[])
 
     int tmpX, tmpY, minDistance; // minDistance - minimal distance between player and cloasest enemy
 
-    QMessageBox::information(nullptr, "Message Box", "use arrows to move\npress 'OK' to continue");
+    QMessageBox::information(nullptr, "Message Box", "use arrow keys to move\npress 'OK' to continue");
 
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
-            //move:
+            //move player:
             // check keyboard
             rect->movePlayer();
-            for (auto& e : enemies) {
-                e->moveEnemy();
-            }
-
-            //render:
-            rect->render();
-            for (auto& e : enemies) {
-                e->render();
-            }
-
-            gameState.render(scene);
-
 
             //next lvl condition:
             if (rect->exitLvl()) {
@@ -103,7 +93,7 @@ int main(int argc, char* argv[])
                 levels.addWalls(scene);
             }
 
-            //check if player is to close to enemy:
+            //calculate distance from player to cloasest enemy
             rect->getPlayerPos(&tmpX, &tmpY);
             minDistance = view->width() + view->height(); // width + height always > diagonal [maximum distance]
 
@@ -114,6 +104,16 @@ int main(int argc, char* argv[])
                     minDistance = dist;
                 }
             }
+
+            //check if enemy should chase player
+            if (minDistance < chaseDis)
+                chasing = true;
+            else {
+                chasing = false;
+            }
+                for (auto& e : enemies) {
+                    e->moveEnemy(chasing,tmpX,tmpY); // chaising player
+                }
 
 
             //reset lvl condition:
@@ -131,6 +131,14 @@ int main(int argc, char* argv[])
                 QMessageBox::information(nullptr, "Message Box", "YOU DIED\n press 'OK' to close");
                 QCoreApplication::quit();
             }
+
+            //render:
+            rect->render();
+            for (auto& e : enemies) {
+                e->render();
+            }
+
+            gameState.render(scene);
             
             //qDebug() << rect->getEndLvl();
             //qDebug() << tmpX << " " << tmpY;

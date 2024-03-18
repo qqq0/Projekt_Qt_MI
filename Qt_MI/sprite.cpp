@@ -6,7 +6,7 @@ bool sprite::collisionDetection() {
 	for (QGraphicsItem* item : collidingItems) {
 		// check if item is sprite subclass
 		if (dynamic_cast<sprite*>(item) != nullptr) {	
-			return true;
+			return false;		 //movable entities can go through ench other
 		}
 		
 		// check if wall
