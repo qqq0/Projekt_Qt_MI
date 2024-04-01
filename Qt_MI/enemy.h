@@ -1,6 +1,8 @@
 #pragma once
 #include "sprite.h"
 #include <vector>
+#include<queue>
+
 class enemy : public sprite
 {
 public:
@@ -11,7 +13,11 @@ public:
 	void chooseTarget(int width,int haight);
 private:
 	void path();
+	bool possitionValid(int x, int y);
+	int distanceTo(int ToX, int ToY, int FromX, int FromY);
 
+	const int refreashRate = 20;
+	int refreashCnt = 0;
 	int targetX;
 	int targetY;
 	int i = 0;
@@ -19,5 +25,7 @@ private:
 
 	std::vector<int> pathX;
 	std::vector<int> pathY;
+
+
 };
 

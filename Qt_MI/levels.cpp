@@ -37,6 +37,13 @@ void levels::addWalls(QGraphicsScene* scene)
         wallGroup->addToGroup(scene->addRect(200, 200, 400, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
         wallGroup->addToGroup(scene->addRect(200, 400, 400, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
 
+        //debuging pathfinding
+        /*
+        wallGroup->addToGroup(scene->addRect(720, 302, 150, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
+        wallGroup->addToGroup(scene->addRect(720, 250, 20, 100, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
+        wallGroup->addToGroup(scene->addRect(720, 259, 150, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
+        */
+
         // EXIT
         wallGroup->addToGroup(scene->addRect(0, 280, 20, 20, QPen(Qt::NoPen), QBrush(Qt::green)));
         break;

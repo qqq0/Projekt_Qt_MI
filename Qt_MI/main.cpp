@@ -59,9 +59,9 @@ int main(int argc, char* argv[])
     gameState.render(scene);
 
     //create enemy
-    std::vector<enemy*> enemies{ new enemy(100, 100) , new enemy(150, 100), new enemy(100, 200)};
-    std::vector<int> enemyStartX{ 50 ,70,50 };
-    std::vector<int> enemyStartY{ 260 ,300,340 };
+    std::vector<enemy*> enemies{ new enemy(100, 100) };//, new enemy(150, 100), new enemy(100, 200)};
+    std::vector<int> enemyStartX{ 50 };//, 70, 50};
+    std::vector<int> enemyStartY{ 260 };//, 300, 340};
  
     //enemy kill range
     const int killDis = 22;
@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
             }
 
             //check if enemy should chase player
-            if (minDistance < chaseDis)
+            if (minDistance <= chaseDis)
                 chasing = true;
             else {
                 chasing = false;
@@ -143,6 +143,7 @@ int main(int argc, char* argv[])
             //qDebug() << rect->getEndLvl();
             //qDebug() << tmpX << " " << tmpY;
             //qDebug() << minDistance;
+            
 
             });
         gameTick->start(5);

@@ -22,6 +22,8 @@ sprite::sprite(int x, int y, QBrush col)
 	setBrush(col);
 	setRect(0, 0, SIZE, SIZE);
 	setSpritePos(x, y);
+	prevX = x;
+	prevY = y;
 }
 
 /// <summary>
