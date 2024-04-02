@@ -1,6 +1,9 @@
 #include "enemy.h"
 #include <qdebug.h>
 #include <algorithm>
+#include <qimage.h>
+#include <qlabel.h>
+#include <qapplication.h>
 
 const QColor enemy::defaultColor = QColor(Qt::red);
 
@@ -63,21 +66,7 @@ void enemy::chooseTarget(int width, int height) {
 
 }
 
-struct node{
-	int X;
-	int Y;
-	int F;
-	int G;
-	int H;
-	node* parent;	// parrent node
 
-	struct node(int nX, int nY, int nF, int nG, int nH, node* nparent)
-		: X(nX), Y(nY), F(nF), G(nG), H(nH), parent(nparent) {}
-
-	bool operator<(const node& other) const {	//overload operator for sorting in priority_queue
-		return F > other.F;
-	}
-};
 
 bool enemy::possitionValid(int x, int y) {
 	setPos(x, y);
@@ -98,24 +87,88 @@ int enemy::distanceTo(int ToX, int ToY,int FromX, int FromY) {
 	return dist;
 }
 
+
+
+
+// Function to update the closed set image
+void enemy::updateClosedSetImage(const std::vector<std::vector<bool>>& closedSet, QImage& image) {
+	// Set pixels corresponding to closed set
+	for (int i = 0; i < closedSet.size(); ++i) {
+		for (int j = 0; j < closedSet[i].size(); ++j) {
+			if (closedSet[i][j]) {
+				image.setPixel(i, j, qRgb(0, 0, 255)); // Set pixel to black
+			}
+			else {
+				image.setPixel(i, j, qRgb(255, 255, 255)); // Set pixel to white
+			}
+		}
+	}
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			image.setPixel(targetX + i, targetY + j, qRgb(255, 0, 0));
+		}
+	}
+	
+}
+
+void enemy::updateOpenSetImage(const std::vector<node>& openSet, QImage& image) {
+	// Set pixels corresponding to nodes in the open set
+	for (const auto& node : openSet) {
+		image.setPixel(node.X+1, node.Y, qRgb(255, 0, 0)); // Set pixel to green
+	}
+}
+
+
+
+
 void enemy::path() {
 	
 	//A* algorithm
 	pathX.clear();
 	pathY.clear();
 
-	std::priority_queue<node> openSet;
+	//std::priority_queue<node> openSet;
+	std::vector<node> openSet;
 	std::vector<std::vector<bool>> closedSet(800, std::vector<bool>(600, false));
-	std::vector<std::vector<node*>> cameFrom(800, std::vector<node*>(600, nullptr));
+
+	bool update = false;
 
 	node start(x, y, 0, 0, distanceTo(targetX, targetY), nullptr);
-	openSet.push(start);
+	openSet.push_back(start);
+
+
+
+	QImage image(800, 600, QImage::Format_RGB32);
+	QLabel label;
+	int c = 0;
+
+
 	while (!openSet.empty()) {
-		node current = openSet.top();
-		openSet.pop();
+		std::sort(openSet.begin(), openSet.end());
+		node current = openSet.back();
+		openSet.pop_back();
+
+
+		
+		if (c >= 10) {
+			c = 0;
+			updateClosedSetImage(closedSet, image);
+			updateOpenSetImage(openSet, image);
+
+			// Display the updated image
+			label.setPixmap(QPixmap::fromImage(image));
+			label.show();
+			qApp->processEvents();
+		}else {
+			c++;
+		}
+		
+
+
 
 		//path reconstruction
-		if (current.X == targetX && current.Y == targetY) {
+		if ((abs(current.X - targetX) <=5) && (abs(current.Y - targetY) <=5)) {
+		//if (current.X == targetX && current.Y == targetY) {
 			while (current.parent != nullptr) {
 				pathX.push_back(current.X);
 				pathY.push_back(current.Y);
@@ -130,8 +183,8 @@ void enemy::path() {
 		closedSet[current.X][current.Y] = true;
 		
 		//check neighbor nodes
-		for (int i = -1; i <= 1; i++) {
-			for (int j = -1; j <= 1; j++) {
+		for (int i = -5; i <= 5; i+=5) {
+			for (int j = -5; j <= 5; j+=5) {
 				if (i == 0 && j == 0) {
 					continue;
 				}
@@ -144,11 +197,36 @@ void enemy::path() {
 					int checkH = distanceTo(targetX,targetY,newX, newY);
 					int checkF = checkG + checkH;
 
+
+						
+
 					//if not alredy added, add node to set and update parrent
 					if (!closedSet[newX][newY] || (checkF < current.F)) {
 						if (!closedSet[newX][newY]) {
-							openSet.push(node(newX, newY, checkF, checkG, checkH, new node(current)));
-							cameFrom[newX][newY] = new node(current);
+
+							update = false;
+
+							for (auto& n : openSet) {
+								if (n.X == newX && n.Y == newY) {
+									
+									if (checkF <= n.F) {
+										
+										update = true;
+										if (checkF == n.F) continue;
+										n.F = checkF;
+										n.G = checkG;
+										n.H = checkH;
+										n.parent = new node(current);
+									}
+								}
+							}
+							
+							if (!update) {
+								openSet.push_back(node(newX, newY, checkF, checkG, checkH, new node(current)));
+							}
+							
+							
+							//cameFrom[newX][newY] = new node(current);
 						}
 					}
 

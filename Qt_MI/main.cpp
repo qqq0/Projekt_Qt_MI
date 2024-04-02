@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
  
     //enemy kill range
     const int killDis = 22;
-    const  int chaseDis = 200;
+    const  int chaseDis = 2;
     bool chasing = false;
 
     for (auto& e : enemies) {
