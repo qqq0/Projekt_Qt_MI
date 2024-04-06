@@ -11,11 +11,13 @@ public:
 	void moveEnemy(bool chase, int playerX, int playerY);
 	int distanceTo(int ToX, int ToY);
 	void chooseTarget(int width,int haight);
+	void clearPath();
 private:
 	void path();
 	bool possitionValid(int x, int y);
 	int distanceTo(int ToX, int ToY, int FromX, int FromY);
-
+	
+	const int maxTargetDistanece = 300; //set maximum distance (lower number improwes speed of searching for paths)
 	
 	struct node {
 		int X;
@@ -42,7 +44,8 @@ private:
 	int targetX;
 	int targetY;
 	int i = 0;
-	int speed = 5;	// movement speed as % of player speed max 100%
+	int speedI = 0;
+	int speed = 10;	
 
 	std::vector<int> pathX;
 	std::vector<int> pathY;

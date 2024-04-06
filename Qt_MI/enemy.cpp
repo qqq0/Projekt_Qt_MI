@@ -13,7 +13,11 @@ enemy::enemy(int x, int y) : sprite(x, y, enemy::defaultColor)
 
 void enemy::moveEnemy(bool chase,int playerX,int playerY) {
 
-	if (rand() % 100 > speed){	// skip moves to slow down enemy
+	if (speedI >= speed) {	// skip moves to slow down enemy
+		speedI = 0;
+	}
+	else {
+		speedI++;
 		return;
 	}
 
@@ -57,11 +61,14 @@ void enemy::chooseTarget(int width, int height) {
 	int maxX = width - 40;
 	int minY = 20;
 	int maxY = height - 40;
-
+	int distance;
+	
 	do {
 		targetX = minX + rand() % (maxX - minX + 1);
 		targetY = minY + rand() % (maxY - minY + 1);
-	} while (!possitionValid(targetX, targetY));
+		distance = distanceTo(targetX, targetY);
+
+	} while (!possitionValid(targetX, targetY) || (distance >maxTargetDistanece));
 	
 
 }
@@ -118,14 +125,16 @@ void enemy::updateOpenSetImage(const std::vector<node>& openSet, QImage& image) 
 	}
 }
 
-
+void enemy::clearPath() {
+	pathX.clear();
+	pathY.clear();
+}
 
 
 void enemy::path() {
 	
 	//A* algorithm
-	pathX.clear();
-	pathY.clear();
+	clearPath();
 
 	//std::priority_queue<node> openSet;
 	std::vector<node> openSet;
@@ -149,8 +158,8 @@ void enemy::path() {
 		openSet.pop_back();
 
 
-		
-		if (c >= 10) {
+		/*
+		if (c >= 1) {
 			c = 0;
 			updateClosedSetImage(closedSet, image);
 			updateOpenSetImage(openSet, image);
@@ -162,12 +171,12 @@ void enemy::path() {
 		}else {
 			c++;
 		}
-		
+		*/
 
 
 
 		//path reconstruction
-		if ((abs(current.X - targetX) <=5) && (abs(current.Y - targetY) <=5)) {
+		if ((abs(current.X - targetX) <=15) && (abs(current.Y - targetY) <=15)) {
 		//if (current.X == targetX && current.Y == targetY) {
 			while (current.parent != nullptr) {
 				pathX.push_back(current.X);
@@ -183,8 +192,8 @@ void enemy::path() {
 		closedSet[current.X][current.Y] = true;
 		
 		//check neighbor nodes
-		for (int i = -5; i <= 5; i+=5) {
-			for (int j = -5; j <= 5; j+=5) {
+		for (int i = -10; i <= 10; i+=10) {
+			for (int j = -10; j <= 10; j+=10) {
 				if (i == 0 && j == 0) {
 					continue;
 				}

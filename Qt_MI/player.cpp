@@ -61,7 +61,7 @@ player::player(int x, int y) : sprite(x, y, player::defaultColor)
 }
 
 bool player::exitLvl() {
-	if (x > 20 && x < 25 && y>275 && y<285) {	//exit coordiantes
+	if (x > 20 && x < 30 && y>270 && y<290) {	//exit coordiantes
 		return true;
 	}
 	else {

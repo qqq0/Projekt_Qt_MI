@@ -59,9 +59,9 @@ int main(int argc, char* argv[])
     gameState.render(scene);
 
     //create enemy
-    std::vector<enemy*> enemies{ new enemy(100, 100) };//, new enemy(150, 100), new enemy(100, 200)};
-    std::vector<int> enemyStartX{ 50 };//, 70, 50};
-    std::vector<int> enemyStartY{ 260 };//, 300, 340};
+    std::vector<enemy*> enemies{ new enemy(100, 100) , new enemy(150, 100)};
+    std::vector<int> enemyStartX{ 50 , 70};
+    std::vector<int> enemyStartY{ 260 , 300};
  
     //enemy kill range
     const int killDis = 22;
@@ -88,6 +88,7 @@ int main(int argc, char* argv[])
                 rect->setSpritePos(startX, startY);
                 for (size_t i = 0; i < enemies.size();i++) {
                     enemies[i]->setSpritePos(enemyStartX[i], enemyStartY[i]);
+                    enemies[i]->clearPath();
                 }
                 levels.nextLvl();
                 levels.addWalls(scene);
@@ -123,6 +124,7 @@ int main(int argc, char* argv[])
 
                 for (size_t i = 0; i < enemies.size(); i++) {
                     enemies[i]->setSpritePos(enemyStartX[i], enemyStartY[i]);
+                    enemies[i]->clearPath();
                 }
             }
 
@@ -146,7 +148,7 @@ int main(int argc, char* argv[])
             
 
             });
-        gameTick->start(5);
+        gameTick->start(20);
 
 
     return a.exec();
