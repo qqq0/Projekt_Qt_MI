@@ -10,6 +10,8 @@ bool sprite::collisionDetection() {
 		}
 		
 		// check if wall
+
+
 		if (typeid(*item) == typeid(QGraphicsRectItem)) {	
 			return true;
 		}

@@ -26,31 +26,53 @@ void enemy::moveEnemy(bool chase,int playerX,int playerY) {
 			refreashCnt = 0;
 			targetX = playerX;
 			targetY = playerY;
+
+			prevPathX = pathX;
+			prevPathY = pathY;
+			prevI = i;
 			path();
 			i = 0;
+
+			if (pathX.size() >= distanceTo(targetX, targetY) / pathStep) {
+				pathX = prevPathX;
+				pathY = prevPathY;
+				i = prevI;
+
+			}
+			
+
 		}else{
 			refreashCnt++;
 		}
 		
-	}else if(pathX.size() <= i || pathY.size() <= i) {
+	}
+	if(pathX.size() <= i || pathY.size() <= i) {
 		chooseTarget(800, 600);	// zmieniæ wymiary na sta³e przekazywane do enemy
 		path();
 		i = 0;
 	}
 
 	if (pathX.size() > i && pathY.size() > i) {
-		int newX = pathX[i];
-		int newY = pathY[i];
+
+		int deltaX = (pathX[i] > x) ? 1 : (pathX[i] < x) ? -1 : 0;
+		int deltaY = (pathY[i] > y) ? 1 : (pathY[i] < y) ? -1 : 0;
+
+		int newX = x + deltaX;
+		int newY = y + deltaY;
+
+		if (newX == pathX[i] && newY == pathY[i]) {
+			i++;
+		}
+		//int newX = pathX[i];
+		//int newY = pathY[i];
 		move(newX, newY);
-		i++;
+		
 	}
 
 }
 
 int enemy::distanceTo(int ToX, int ToY) {
 	int dist;
-	//dist = (int)sqrt((x - ToX) * (x - ToX) + (y - ToY) * (y - ToY));
-	//return dist;
 	dist = abs(x - ToX) + abs(y - ToY);
 	return dist;
 }
@@ -176,7 +198,7 @@ void enemy::path() {
 
 
 		//path reconstruction
-		if ((abs(current.X - targetX) <=15) && (abs(current.Y - targetY) <=15)) {
+		if ((abs(current.X - targetX) <= pathStep+1) && (abs(current.Y - targetY) <= pathStep+1)) {
 		//if (current.X == targetX && current.Y == targetY) {
 			while (current.parent != nullptr) {
 				pathX.push_back(current.X);
@@ -192,8 +214,8 @@ void enemy::path() {
 		closedSet[current.X][current.Y] = true;
 		
 		//check neighbor nodes
-		for (int i = -10; i <= 10; i+=10) {
-			for (int j = -10; j <= 10; j+=10) {
+		for (int i = -pathStep; i <= pathStep; i+= pathStep) {
+			for (int j = -pathStep; j <= pathStep; j+= pathStep) {
 				if (i == 0 && j == 0) {
 					continue;
 				}

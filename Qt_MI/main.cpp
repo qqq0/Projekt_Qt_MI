@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
  
     //enemy kill range
     const int killDis = 22;
-    const  int chaseDis = 2;
+    const  int chaseDis = 1;
     bool chasing = false;
 
     for (auto& e : enemies) {
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 
     int tmpX, tmpY, minDistance; // minDistance - minimal distance between player and cloasest enemy
 
-    QMessageBox::information(nullptr, "Message Box", "use arrow keys to move\npress 'OK' to continue");
+    QMessageBox::information(nullptr, "Message Box", "use W S A D to move\npress 'OK' to continue");
 
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
@@ -144,11 +144,11 @@ int main(int argc, char* argv[])
             
             //qDebug() << rect->getEndLvl();
             //qDebug() << tmpX << " " << tmpY;
-            //qDebug() << minDistance;
+            qDebug() << chasing;
             
 
             });
-        gameTick->start(20);
+        gameTick->start(10);
 
 
     return a.exec();
