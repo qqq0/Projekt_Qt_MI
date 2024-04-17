@@ -8,6 +8,7 @@
 #include "enemy.h"
 #include "gameState.h"
 #include <QMessageBox>
+#include <qpushbutton.h>
 
 #include <vector>
 
@@ -15,10 +16,68 @@ int main(int argc, char* argv[])
 {
     srand(time(nullptr)); // time(nullptr)
 
+    int NumberOfEnemies = 1;
+    int DifficultyLVL = 0;
+    const QString DifficultyNames[] = { "EASY","NORMAL","HARD" };
+
     QApplication a(argc, argv);
 
     //creating a scene
+    QGraphicsScene* menu = new QGraphicsScene();
+    //add a view
+    QGraphicsView* menuView = new QGraphicsView(menu);
+    menuView->setFixedSize(800, 600);
+
+    //Adding buttons to menu
+    QPushButton* StartBt = new QPushButton;
+    StartBt->setText("START");
+    StartBt->setGeometry(QRect(100, 100, 150, 40));
+    menu->addWidget(StartBt);
+
+    QPushButton* DifficultyBt = new QPushButton;
+    DifficultyBt->setText("DIFFICULTY: " + DifficultyNames[DifficultyLVL]);
+    DifficultyBt->setGeometry(QRect(100, 150, 150, 40));
+    menu->addWidget(DifficultyBt);
+
+    QPushButton* EnemyBt = new QPushButton;
+    EnemyBt->setText(QString("ENEMIES: %1").arg(NumberOfEnemies));
+    EnemyBt->setGeometry(QRect(100, 200, 150, 40));
+    menu->addWidget(EnemyBt);
+
+    QPushButton* QuitBt = new QPushButton;
+    QuitBt->setText("QUIT");
+    QuitBt->setGeometry(QRect(100, 250, 150, 40));
+    menu->addWidget(QuitBt);
+
+    menuView->show();
+
+    //creating a scene
     QGraphicsScene* scene = new QGraphicsScene();
+    //add a view
+    QGraphicsView* view = new QGraphicsView(scene);
+
+    view->setFixedSize(800, 600);
+    scene->setSceneRect(0, 0, 800, 600);
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+
+
+    QObject::connect(StartBt, &QPushButton::clicked, [&]() {
+        menuView->close();
+        view->show();
+        });
+    QObject::connect(DifficultyBt, &QPushButton::clicked, [&]() {
+        DifficultyLVL == 2 ? DifficultyLVL = 0 : DifficultyLVL++;
+        DifficultyBt->setText("DIFFICULTY: " + DifficultyNames[DifficultyLVL]);
+        });
+    QObject::connect(EnemyBt, &QPushButton::clicked, [&]() {
+        NumberOfEnemies == 3 ? NumberOfEnemies = 1 : NumberOfEnemies++;
+        EnemyBt->setText(QString("ENEMIES: %1").arg(NumberOfEnemies));
+        });
+    QObject::connect(QuitBt, &QPushButton::clicked, [&]() {
+        QCoreApplication::quit();
+        });
 
 
 
@@ -26,23 +85,13 @@ int main(int argc, char* argv[])
     levels levels;
     levels.nextLvl();
     levels.addWalls(scene);  
+    //creating game view
     
-   
-    //qDebug() << X;
 
-    //add a view
-    QGraphicsView* view = new QGraphicsView(scene);
-
-    //view->setScene(scene);
-    view->setFixedSize(800, 600);
-    scene->setSceneRect(0, 0, 800, 600);
-
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    
     //create a player
     const int startX = view->width() - 45;
     const int startY = view->height() / 2 - sprite::SIZE;
+
     player* rect = new player(startX, startY);
     //make player focusble
     rect->setFlag(QGraphicsItem::ItemIsFocusable);
@@ -52,7 +101,7 @@ int main(int argc, char* argv[])
     scene->addItem(rect);
 
     //create a player
-    view->show();
+    
 
     //create and add game state indicators to scene
     gameState gameState(scene);
@@ -65,7 +114,7 @@ int main(int argc, char* argv[])
  
     //enemy kill range
     const int killDis = 22;
-    const  int chaseDis = 1;
+    const  int chaseDis = 150;
     bool chasing = false;
 
     for (auto& e : enemies) {
@@ -74,7 +123,7 @@ int main(int argc, char* argv[])
 
     int tmpX, tmpY, minDistance; // minDistance - minimal distance between player and cloasest enemy
 
-    QMessageBox::information(nullptr, "Message Box", "use W S A D to move\npress 'OK' to continue");
+    //QMessageBox::information(nullptr, "Message Box", "use W S A D to move\npress 'OK' to continue");
 
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
