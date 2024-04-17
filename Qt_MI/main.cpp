@@ -16,9 +16,11 @@ int main(int argc, char* argv[])
 {
     srand(time(nullptr)); // time(nullptr)
 
-    int NumberOfEnemies = 1;
+    int NumberOfEnemies = 2;
     int DifficultyLVL = 0;
     const QString DifficultyNames[] = { "EASY","NORMAL","HARD" };
+
+
 
     QApplication a(argc, argv);
 
@@ -61,9 +63,26 @@ int main(int argc, char* argv[])
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-
+//create enemy
+    std::vector<enemy*> enemies{ };
+    std::vector<int> enemyStartX{ };
+    std::vector<int> enemyStartY{  };
 
     QObject::connect(StartBt, &QPushButton::clicked, [&]() {
+        for (auto& e : enemies) {
+            scene->removeItem(e);
+        }
+        enemies.clear();
+        enemyStartX.clear();
+        enemyStartY.clear();
+        for (int i = 0; i < NumberOfEnemies; i++) {
+            enemyStartX.push_back(50);
+            enemyStartY.push_back(230 + i * 30);
+            enemies.push_back(new enemy(enemyStartX[i], enemyStartY[i]));
+        }
+        for (auto& e : enemies) {
+            scene->addItem(e);
+        }
         menuView->close();
         view->show();
         });
@@ -79,51 +98,46 @@ int main(int argc, char* argv[])
         QCoreApplication::quit();
         });
 
+        
+        //creating game view
 
 
-    // add walls
-    levels levels;
-    levels.nextLvl();
-    levels.addWalls(scene);  
-    //creating game view
-    
+        //create a player
+        const int startX = view->width() - 45;
+        const int startY = view->height() / 2 - sprite::SIZE;
 
-    //create a player
-    const int startX = view->width() - 45;
-    const int startY = view->height() / 2 - sprite::SIZE;
+        player* rect = new player(startX, startY);
+        //make player focusble
+        rect->setFlag(QGraphicsItem::ItemIsFocusable);
+        rect->setFocus();
 
-    player* rect = new player(startX, startY);
-    //make player focusble
-    rect->setFlag(QGraphicsItem::ItemIsFocusable);
-    rect->setFocus();
+        //add player to scene
+        scene->addItem(rect);
 
-    //add player to scene
-    scene->addItem(rect);
+        //create a player
 
-    //create a player
-    
 
-    //create and add game state indicators to scene
-    gameState gameState(scene);
-    gameState.render(scene);
+        //create and add game state indicators to scene
+        gameState gameState(scene);
+        gameState.render(scene);
 
-    //create enemy
-    std::vector<enemy*> enemies{ new enemy(100, 100) , new enemy(150, 100)};
-    std::vector<int> enemyStartX{ 50 , 70};
-    std::vector<int> enemyStartY{ 260 , 300};
- 
-    //enemy kill range
-    const int killDis = 22;
-    const  int chaseDis = 150;
-    bool chasing = false;
+        // add walls
+        levels levels;
+        gameState.nextLvl();
+        levels.addWalls(scene,gameState.getLvl());
 
-    for (auto& e : enemies) {
-        scene->addItem(e);
-    }
+      
 
-    int tmpX, tmpY, minDistance; // minDistance - minimal distance between player and cloasest enemy
+        //enemy kill range
+        const int killDis = 22;
+        const  int chaseDis = 150;
+        bool chasing = false;
 
-    //QMessageBox::information(nullptr, "Message Box", "use W S A D to move\npress 'OK' to continue");
+       
+
+        int tmpX, tmpY, minDistance; // minDistance - minimal distance between player and cloasest enemy
+
+        //QMessageBox::information(nullptr, "Message Box", "use W S A D to move\npress 'OK' to continue");
 
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
@@ -135,12 +149,12 @@ int main(int argc, char* argv[])
             if (rect->exitLvl()) {
                 gameState.changeScoreBy(100);
                 rect->setSpritePos(startX, startY);
-                for (size_t i = 0; i < enemies.size();i++) {
+                for (size_t i = 0; i < enemies.size(); i++) {
                     enemies[i]->setSpritePos(enemyStartX[i], enemyStartY[i]);
                     enemies[i]->clearPath();
                 }
-                levels.nextLvl();
-                levels.addWalls(scene);
+                gameState.nextLvl();
+                levels.addWalls(scene, gameState.getLvl());
             }
 
             //calculate distance from player to cloasest enemy
@@ -161,9 +175,9 @@ int main(int argc, char* argv[])
             else {
                 chasing = false;
             }
-                for (auto& e : enemies) {
-                    e->moveEnemy(chasing,tmpX,tmpY); // chaising player
-                }
+            for (auto& e : enemies) {
+                e->moveEnemy(chasing, tmpX, tmpY); // chaising player
+            }
 
 
             //reset lvl condition:
@@ -179,8 +193,13 @@ int main(int argc, char* argv[])
 
             //chceck if player is alive
             if (!gameState.continueGame()) {
-                QMessageBox::information(nullptr, "Message Box", "YOU DIED\n press 'OK' to close");
-                QCoreApplication::quit();
+
+                QMessageBox::information(nullptr, "Message Box", "YOU DIED\n press 'OK' to open menu");
+                gameState.resetGame();
+                levels.addWalls(scene, gameState.getLvl());
+                view->close();
+                menuView->show();
+
             }
 
             //render:
@@ -190,15 +209,15 @@ int main(int argc, char* argv[])
             }
 
             gameState.render(scene);
-            
+
             //qDebug() << rect->getEndLvl();
             //qDebug() << tmpX << " " << tmpY;
             qDebug() << chasing;
-            
+
 
             });
         gameTick->start(10);
 
-
+ 
     return a.exec();
 }

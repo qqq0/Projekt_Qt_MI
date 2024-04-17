@@ -13,11 +13,17 @@ public:
 	void changeScoreBy(int change);
 	void kill();
 	bool continueGame();
+	void resetGame();
+	void nextLvl();
+	int getLvl();
 
 private:
 	const QFont font;
-	int life = 3;
-	int score = 100;
+	const int startLife = 3;
+	const int startScore = 100;
+	int life = startLife;
+	int score = startScore;
+	int lvl = 0;
 	QGraphicsTextItem* scoreText = nullptr;
 	QGraphicsTextItem* lifeText = nullptr;
 	

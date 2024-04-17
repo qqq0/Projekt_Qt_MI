@@ -8,7 +8,7 @@ levels::levels() {
 
 }
 
-void levels::addWalls(QGraphicsScene* scene)
+void levels::addWalls(QGraphicsScene* scene,int lvl)
 {
     if (wallGroup != nullptr) {
         scene->removeItem(wallGroup);
@@ -175,6 +175,3 @@ levels::~levels() {
     }
 }
 
-void levels::nextLvl() {
-    lvl++;
-}

@@ -10,10 +10,10 @@ class levels : public QGraphicsRectItem {
 public:
 	levels();
 	~levels();
-	void addWalls(QGraphicsScene* scene);
-	void nextLvl();
+	void addWalls(QGraphicsScene* scene,int lvl);
+
 private:
 	QGraphicsItemGroup* wallGroup = nullptr;
-	int lvl = 0;
+	//int lvl = 0;
 };
 #endif

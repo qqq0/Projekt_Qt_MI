@@ -48,3 +48,17 @@ bool gameState::continueGame() {
 		return false;
 	}
 }
+
+void gameState::resetGame() {
+	life = startLife;
+	score = startScore;
+	lvl = 1;
+}
+
+void gameState::nextLvl() {
+	lvl++;
+}
+
+int gameState::getLvl() {
+	return lvl;
+}
