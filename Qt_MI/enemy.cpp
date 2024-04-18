@@ -15,10 +15,10 @@ void enemy::moveEnemy(bool chase,int playerX,int playerY) {
 
 	if (speedI >= speed) {	// skip moves to slow down enemy
 		speedI = 0;
+		return;
 	}
 	else {
-		speedI++;
-		return;
+		speedI++;	
 	}
 
 	if (chase) {
@@ -266,6 +266,9 @@ void enemy::path() {
 			}
 		}
 	}
+}
+void enemy::setSpeed(int s) {
+	speed = s;
 }
 
 

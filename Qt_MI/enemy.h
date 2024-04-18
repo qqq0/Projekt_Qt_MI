@@ -12,6 +12,7 @@ public:
 	int distanceTo(int ToX, int ToY);
 	void chooseTarget(int width,int haight);
 	void clearPath();
+	void setSpeed(int s);
 private:
 	void path();
 	bool possitionValid(int x, int y);
@@ -47,7 +48,7 @@ private:
 	int j = 0;
 	int prevI = 0;
 	int speedI = 0;
-	int speed = 1;	
+	int speed = 1;	//skiping move every speed number steps 
 
 	const int pathStep = 10; //ammount of pixels per move
 

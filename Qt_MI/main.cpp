@@ -80,7 +80,9 @@ int main(int argc, char* argv[])
             enemyStartY.push_back(230 + i * 30);
             enemies.push_back(new enemy(enemyStartX[i], enemyStartY[i]));
         }
+            
         for (auto& e : enemies) {
+            e->setSpeed(DifficultyLVL + 1); // higher number - less enemy steps skipped
             scene->addItem(e);
         }
         menuView->close();
@@ -88,6 +90,7 @@ int main(int argc, char* argv[])
         });
     QObject::connect(DifficultyBt, &QPushButton::clicked, [&]() {
         DifficultyLVL == 2 ? DifficultyLVL = 0 : DifficultyLVL++;
+       
         DifficultyBt->setText("DIFFICULTY: " + DifficultyNames[DifficultyLVL]);
         });
     QObject::connect(EnemyBt, &QPushButton::clicked, [&]() {
@@ -210,10 +213,7 @@ int main(int argc, char* argv[])
 
             gameState.render(scene);
 
-            //qDebug() << rect->getEndLvl();
-            //qDebug() << tmpX << " " << tmpY;
             qDebug() << chasing;
-
 
             });
         gameTick->start(10);
