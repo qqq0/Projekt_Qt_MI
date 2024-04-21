@@ -1,16 +1,16 @@
 #include <QtWidgets/QApplication>
 #include <QgraphicsScene>
+#include <QDebug>
+#include <QTimer>
+#include <QMessageBox>
+#include <qpushbutton.h>
+#include <vector>
 #include "player.h"
 #include <QgraphicsView>
 #include "levels.h"
-#include <QDebug>
-#include <QTimer>
 #include "enemy.h"
 #include "gameState.h"
-#include <QMessageBox>
-#include <qpushbutton.h>
 
-#include <vector>
 
 int main(int argc, char* argv[])
 {
@@ -68,7 +68,11 @@ int main(int argc, char* argv[])
     std::vector<int> enemyStartX{ };
     std::vector<int> enemyStartY{  };
 
+//button signals
     QObject::connect(StartBt, &QPushButton::clicked, [&]() {
+        QMessageBox::information(nullptr, "Message Box", "use arrow keys to move\npress 'OK' to continue");
+        menuView->close();
+        view->show();
         for (auto& e : enemies) {
             scene->removeItem(e);
         }
@@ -85,8 +89,8 @@ int main(int argc, char* argv[])
             e->setSpeed(DifficultyLVL + 1); // higher number - less enemy steps skipped
             scene->addItem(e);
         }
-        menuView->close();
-        view->show();
+        
+        
         });
     QObject::connect(DifficultyBt, &QPushButton::clicked, [&]() {
         DifficultyLVL == 2 ? DifficultyLVL = 0 : DifficultyLVL++;
@@ -101,9 +105,6 @@ int main(int argc, char* argv[])
         QCoreApplication::quit();
         });
 
-        
-        //creating game view
-
 
         //create a player
         const int startX = view->width() - 45;
@@ -117,9 +118,6 @@ int main(int argc, char* argv[])
         //add player to scene
         scene->addItem(rect);
 
-        //create a player
-
-
         //create and add game state indicators to scene
         gameState gameState(scene);
         gameState.render(scene);
@@ -128,8 +126,6 @@ int main(int argc, char* argv[])
         levels levels;
         gameState.nextLvl();
         levels.addWalls(scene,gameState.getLvl());
-
-      
 
         //enemy kill range
         const int killDis = 22;
@@ -140,7 +136,6 @@ int main(int argc, char* argv[])
 
         int tmpX, tmpY, minDistance; // minDistance - minimal distance between player and cloasest enemy
 
-        //QMessageBox::information(nullptr, "Message Box", "use W S A D to move\npress 'OK' to continue");
 
         QTimer* gameTick = new QTimer();
         QObject::connect(gameTick, &QTimer::timeout, [&]() {
@@ -198,6 +193,16 @@ int main(int argc, char* argv[])
             if (!gameState.continueGame()) {
 
                 QMessageBox::information(nullptr, "Message Box", "YOU DIED\n press 'OK' to open menu");
+                gameState.resetGame();
+                levels.addWalls(scene, gameState.getLvl());
+                view->close();
+                menuView->show();
+
+            }
+
+            if (gameState.gameWin()) {
+                
+                QMessageBox::information(nullptr, "Message Box", QString("YOU WON\npress 'OK' to open menu\nScore: %1").arg(gameState.getScore()));
                 gameState.resetGame();
                 levels.addWalls(scene, gameState.getLvl());
                 view->close();

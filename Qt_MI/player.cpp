@@ -33,9 +33,7 @@ void player::keyReleaseEvent(QKeyEvent* event)
 
 }
 
-/// <summary>
-/// Update internal coordinates based on key press
-/// </summary>
+// update internal coordinates based on key press
 void player::movePlayer() {
 	int newX = x;
 	int newY = y;

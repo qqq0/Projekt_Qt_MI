@@ -75,7 +75,6 @@ void levels::addWalls(QGraphicsScene* scene,int lvl)
         wallGroup->addToGroup(scene->addRect(780, 0, 20, 600, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
 
         // Level-specific obstacles
-        wallGroup->addToGroup(scene->addRect(100, 50, 200, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
         wallGroup->addToGroup(scene->addRect(100, 530, 200, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
         wallGroup->addToGroup(scene->addRect(100, 250, 200, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
         wallGroup->addToGroup(scene->addRect(500, 250, 200, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
@@ -93,8 +92,6 @@ void levels::addWalls(QGraphicsScene* scene,int lvl)
         wallGroup->addToGroup(scene->addRect(780, 0, 20, 600, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
 
         // Level-specific obstacles
-        wallGroup->addToGroup(scene->addRect(200, 0, 20, 150, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
-        wallGroup->addToGroup(scene->addRect(580, 450, 20, 130, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
         wallGroup->addToGroup(scene->addRect(200, 430, 400, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
         wallGroup->addToGroup(scene->addRect(200, 150, 400, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
         wallGroup->addToGroup(scene->addRect(220, 170, 20, 200, QPen(Qt::NoPen), QBrush(Qt::darkGray)));
@@ -160,9 +157,6 @@ void levels::addWalls(QGraphicsScene* scene,int lvl)
         wallGroup->addToGroup(scene->addRect(470, 350, 60, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));  // Top horizontal
         wallGroup->addToGroup(scene->addRect(470, 430, 60, 20, QPen(Qt::NoPen), QBrush(Qt::darkGray)));  // Bottom horizontal
         wallGroup->addToGroup(scene->addRect(530, 370, 20, 60, QPen(Qt::NoPen), QBrush(Qt::darkGray)));  // Right vertical
-
-        // EXIT
-        wallGroup->addToGroup(scene->addRect(0, 280, 20, 20, QPen(Qt::NoPen), QBrush(Qt::green)));
         break;
     }
     scene->addItem(wallGroup);

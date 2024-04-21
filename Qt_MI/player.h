@@ -5,23 +5,43 @@
 #include <QGraphicsRectItem>
 #include <QKeyEvent>
 #include <QObject>
-#include <QTimer>
 #include "sprite.h"
 
+/**
+* \brief class palyer
+*
+* The class is responsible for operations related to player, it is a child class of sprite
+* It conatains metods related to controlling player keybord inputs
+*
+*/
+
 class player : public sprite {
-	Q_OBJECT	//Add Q_object to be able to handle slots (for timer)
 public:
-	
-	bool exitLvl();
-	void movePlayer();
-	player(int x, int y);
 	static const QColor defaultColor;
+	/**
+	* @brief checks if palyer is in exit position
+	*
+	* @return true if player is in exit coordinates
+	*/
+	bool exitLvl();
+	/**
+	* @brief moves player based on keys pressed
+	*/
+	void movePlayer();
+	/**
+	* @brief creates palyer as child of sprite
+	*
+	* @param x and y position of player
+	*/
+	player(int x, int y);
+	/**
+	* @brief returns current x and y position of player
+	*
+	* @param pointer to store x and y position of player
+	*/
 	void getPlayerPos(int* getX, int* getY);
 private:
-	//QTimer* timer;
 	QSet<int> keysPressed;
-	//void movePlayer();
-	//void collisionDetection(int X, int Y);
 	void keyPressEvent(QKeyEvent* event);
 	void keyReleaseEvent(QKeyEvent* event);
 

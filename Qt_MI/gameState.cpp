@@ -62,3 +62,16 @@ void gameState::nextLvl() {
 int gameState::getLvl() {
 	return lvl;
 }
+
+bool gameState::gameWin() {
+	if (lvl == lastLvl) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+int gameState::getScore() {
+	return score;
+}

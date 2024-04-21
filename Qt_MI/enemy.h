@@ -3,15 +3,56 @@
 #include <vector>
 #include<queue>
 
+/**
+* \brief class enemy
+*
+* The class is responsible for operations related to enemies, it is a child class of sprite
+* It contains metods related to enemy logic like pathfinding and choosing target positions while patroling the tarain and chasing the player.
+* 
+* 
+*/
+
 class enemy : public sprite
 {
 public:
 	static const QColor defaultColor;
+	/**
+	* @brief creates enemy as child of sprite
+	*
+	* @param x and y position of enemy
+	*/
 	enemy(int x, int y);
+	/**
+	* @brief controlls following (with set speed) and creating paths  
+	*
+	* @param chase - true if enemy should chase player
+	* @param player X and Y position of a player for pathfinding during while chasing
+	*/
 	void moveEnemy(bool chase, int playerX, int playerY);
+	/**
+	* @brief calculates manhattan distance from player to point
+	*
+	* @param x and y position of a point that we want to calculate distance to
+	* 
+	* @return calculated distance
+	*/
 	int distanceTo(int ToX, int ToY);
-	void chooseTarget(int width,int haight);
+	/**
+	* @brief chooses a point on a map to go to ensureing that it is within maxTargetDistance
+	*
+	* @param width - width of a map
+	* @param height - height of a map
+	*/
+	void chooseTarget(int width,int height);
+	/**
+	* @brief deleates all contents if pathX and pathY
+	*/
 	void clearPath();
+	/**
+	* @brief sets enemy movement speed
+	*
+	* @param value of speed (how often to skip moves relative to player)
+	*/
 	void setSpeed(int s);
 private:
 	void path();
@@ -40,7 +81,7 @@ private:
 	void updateClosedSetImage(const std::vector<std::vector<bool>>& closedSet, QImage& image);
 	void updateOpenSetImage(const std::vector<node>& openSet, QImage& image);
 
-	const int refreashRate = 10;
+	const int refreashRate = 10;	//how many steps between path updates while chasing
 	int refreashCnt = 0;
 	int targetX;
 	int targetY;

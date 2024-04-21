@@ -11,7 +11,6 @@ bool sprite::collisionDetection() {
 		
 		// check if wall
 
-
 		if (typeid(*item) == typeid(QGraphicsRectItem)) {	
 			return true;
 		}
@@ -28,10 +27,9 @@ sprite::sprite(int x, int y, QBrush col)
 	prevY = y;
 }
 
-/// <summary>
-/// Render entity position
-/// Revert position if collision detected
-/// </summary>
+
+// Render entity position
+// Revert position if collision detected
 void sprite::render() {
 
 	setPos(x, prevY);
@@ -58,9 +56,7 @@ void sprite::setSpritePos(int x, int y) {
 	prevY = y;
 }
 
-/// <summary>
-/// Update internal coordinates
-/// </summary>
+// Update internal coordinates
 void sprite::move(int x, int y) {
 	this->x = x;
 	this->y = y;

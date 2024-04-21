@@ -47,7 +47,7 @@ void enemy::moveEnemy(bool chase,int playerX,int playerY) {
 		
 	}
 	if(pathX.size() <= i || pathY.size() <= i) {
-		chooseTarget(800, 600);	// zmieniæ wymiary na sta³e przekazywane do enemy
+		chooseTarget(800, 600);
 		path();
 		i = 0;
 	}
